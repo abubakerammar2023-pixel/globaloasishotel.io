@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Bill - {{ hotel_name }}{% endblock %}
+{% block content %}
+{% set b = bill.booking %}
+<section class="bill">
+  <header>
+    <img src="{{ url_for('static', filename=images.logo) }}" alt="" class="bill-logo"
+         onerror="this.style.display='none'">
+    <h1>{{ hotel_name }}</h1>
+    <p>{{ 'Final bill' if final else 'Bill preview' }} &middot; Booking {{ b.booking_id }}</p>
+  </header>
+
+  <dl class="bill-info">
+    <div><dt>Guest</dt><dd>{{ b.name }}</dd></div>
+    <div><dt>Phone</dt><dd>{{ b.phone }}</dd></div>
+    <div><dt>Room</dt><dd>{{ b.room_no }} ({{ b.room_type }})</dd></div>
+    <div><dt>Stay</dt><dd>{{ b.check_in }} to {{ b.check_out }}</dd></div>
+    <div><dt>Nights</dt><dd>{{ b.nights }}</dd></div>
+  </dl>
+
+  <table class="bill-table">
+    <tbody>
+      <tr><td>Room charges ({{ b.nights }} night{{ 's' if b.nights != '1' }})</td><td>{{ "{:,}".format(bill.room_charge) }}</td></tr>
+      {% for o in bill.orders %}
+      <tr class="sub"><td>Restaurant: {{ o }}</td><td></td></tr>
+      {% endfor %}
+      <tr><td>Restaurant total</td><td>{{ "{:,}".format(bill.food_charge) }}</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td>Grand total</td><td>{{ "{:,}".format(bill.total) }}</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="actions no-print">
+    {% if final %}
+      <p class="done">Checkout complete. Room {{ b.room_no }} is available again.</p>
+      <button class="btn btn-brass" onclick="window.print()">Print bill</button>
+      <a class="btn btn-outline" href="{{ url_for('home') }}">Back to home</a>
+    {% else %}
+      <form method="post" action="{{ url_for('confirm_checkout') }}">
+        <input type="hidden" name="booking_id" value="{{ b.booking_id }}">
+        <button type="submit" class="btn btn-brass">Confirm checkout</button>
+        <a class="btn btn-outline" href="{{ url_for('checkout') }}">Cancel</a>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
