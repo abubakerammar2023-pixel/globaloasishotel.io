@@ -1,3 +1,0 @@
-booking_id,name,phone,id_proof,room_no,room_type,check_in,check_out,nights,room_charge,food_charge,orders,status
-B001,Ali Khan,0501234567,ID12345,102,Double,2026-11-01,2026-11-04,3,24000,850,Chicken Biryani x2; Tea x3,Checked-in
-B002,Sara Ahmed,0559876543,ID67890,201,Suite,2026-11-02,2026-11-03,1,15000,0,,Checked-in
