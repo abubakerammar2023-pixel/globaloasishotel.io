@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero" style="background-image: url('{{ url_for('static', filename=images.banner) }}')">
+  <div class="hero-text">
+    <h1>{{ hotel_name }}</h1>
+    <p>Book rooms, keep guest records, bill the restaurant and check guests out, all from one screen.</p>
+    <div class="actions">
+      <a class="btn btn-brass" href="{{ url_for('book_room') }}">Book a room</a>
+      <a class="btn btn-ghost" href="{{ url_for('checkout') }}">Check out a guest</a>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div><strong>{{ stats.total }}</strong><span>Rooms</span></div>
+  <div><strong>{{ stats.available }}</strong><span>Available today</span></div>
+  <div><strong>{{ stats.occupied }}</strong><span>Occupied</span></div>
+  <div><strong>{{ stats.guests }}</strong><span>Guests in house</span></div>
+</section>
+
+<section>
+  <h2>Rooms</h2>
+  <div class="room-grid">
+    {% for room in rooms %}
+    <article class="room-card">
+      <div class="room-photo">
+        <img src="{{ url_for('static', filename=room.image) }}" alt="{{ room.type }} room"
+             onerror="this.style.display='none'">
+        <span class="badge badge-{{ room.status|lower }}">{{ room.status }}</span>
+      </div>
+      <div class="room-body">
+        <h3>Room {{ room.no }}</h3>
+        <p>{{ room.type }} &middot; {{ "{:,}".format(room.price) }} per night</p>
+        {% if room.status == 'Available' %}
+          <a class="btn btn-small" href="{{ url_for('book_room', room=room.no) }}">Book this room</a>
+        {% else %}
+          <a class="btn btn-small btn-outline" href="{{ url_for('guests', q=room.no) }}">View guest</a>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="split">
+  <div class="split-photo">
+    <img src="{{ url_for('static', filename=images.hotel) }}" alt="{{ hotel_name }} from outside"
+         onerror="this.style.display='none'">
+  </div>
+  <div class="split-text">
+    <h2>The hotel</h2>
+    <p>Every booking, guest and bill is saved in a single CSV file, so the front desk always sees which rooms are free and what each guest owes.</p>
+    <a class="btn btn-outline" href="{{ url_for('guests') }}">Open guest records</a>
+  </div>
+</section>
+
+<section class="split split-reverse">
+  <div class="split-photo">
+    <img src="{{ url_for('static', filename=images.restaurant) }}" alt="Hotel restaurant"
+         onerror="this.style.display='none'">
+  </div>
+  <div class="split-text">
+    <h2>Restaurant</h2>
+    <p>Add food orders to a guest's room. The amount is added to the bill and shown again at checkout.</p>
+    <a class="btn btn-outline" href="{{ url_for('restaurant') }}">Take an order</a>
+  </div>
+</section>
+{% endblock %}
